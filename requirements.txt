@@ -1,0 +1,5 @@
+requests
+flask
+apscheduler
+mysql.connector
+pytest
