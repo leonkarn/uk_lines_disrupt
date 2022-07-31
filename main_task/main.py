@@ -38,11 +38,12 @@ sched.start()
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
+
 mydb = mysql.connector.connect(
     host="mydb_new",
     user="root",
-    password="root",
-    database="ledger"
+    password="testroot",
+    database="newdb"
 )
 mycursor = mydb.cursor()
 
@@ -77,7 +78,7 @@ def find_specific_task(task_id):
         mycursor.execute(
 
             """
-           DELETE * FROM customers where task_id= '{task_id}'
+           DELETE * FROM lines_uk where task_id= '{task_id}'
                              """.format(task_id=int(task_id))
         )
         return "DELETE RECORD", task_id
@@ -99,7 +100,7 @@ def find_tasks():
 
         query = f"""
 
-        insert into LINES_UK
+        insert into lines_uk
          values
         (
         '{task_id}',

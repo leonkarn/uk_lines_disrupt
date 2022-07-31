@@ -28,7 +28,7 @@ time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 req = requests.get(
     "https://api.tfl.gov.uk/Line/central,bakerloo,circle,district,hammersmith-city,jubilee,metropolitan,northern,piccadilly,victoria,waterloo-city/Disruption")
 res = req.json()
-
+print ("newresult",res)
 for item in res:
     lines = lines_parser(item["description"])
     data = {"time": time_now, "lines": lines, "description": item["description"], "type": item["type"],

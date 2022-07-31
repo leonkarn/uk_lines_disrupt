@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
 
   app:
@@ -9,12 +9,10 @@ services:
     ports:
       - "5555:5555"
     depends_on:
-      db:
-        condition: service_healthy
+      - database
+      
 
-
-
-  db:
+  database:
       container_name: mydb_new
       image: mysql:5.7
       volumes:
@@ -22,15 +20,18 @@ services:
       ports:
         - "3306:3306"
       environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: ledger
+        MYSQL_ROOT_PASSWORD: testroot
+        MYSQL_DATABASE: newdb
         MYSQL_PORT: 3306
-      healthcheck:
+      # healthcheck:
 
-        test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      #   test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
 
 
 
+volumes:
+    app:
+    database:
 
 
 
