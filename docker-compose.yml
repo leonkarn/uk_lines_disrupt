@@ -1,22 +1,22 @@
 version: "3"
 services:
 
-  # app:
-  #   container_name: instashop_main
-  #   build: .
-  #   volumes:
-  #     - ./main_task:/app
-  #   ports:
-  #     - "5555:5555"
-  #   depends_on:
-  #     - database
+  app:
+    container_name: instashop_main
+    build: .
+    volumes:
+      - ./main_task:/app
+    ports:
+      - "5555:5555"
+    depends_on:
+      - database
       
 
   database:
       container_name: mydb_new
       image: mysql:5.7
       volumes:
-        - ./sql_data_2:/var/lib/mysql
+        - ./sql_data:/var/lib/mysql
       ports:
         - "3306:3306"
       environment:
