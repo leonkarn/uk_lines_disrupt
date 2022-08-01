@@ -16,7 +16,7 @@ services:
       container_name: mydb_new
       image: mysql:5.7
       volumes:
-        - ./sql_data:/var/lib/mysql
+        - ./sql_data_2:/var/lib/mysql
       ports:
         - "3306:3306"
       environment:
