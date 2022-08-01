@@ -10,7 +10,14 @@ services:
       - "5555:5555"
     depends_on:
       - database
-      
+
+  proxy:
+    build: nginx_server
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - app
 
   database:
       container_name: mydb_new
