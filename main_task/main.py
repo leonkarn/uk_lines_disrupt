@@ -49,7 +49,7 @@ mycursor = mydb.cursor()
 
 @app.route("/")
 def home_page():
-   return  "Root page"
+   return  "new change Root page"
 
 
 
