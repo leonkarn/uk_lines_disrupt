@@ -84,8 +84,8 @@ def home_page():
 #         return "DELETE RECORD", task_id
 
 
-# @app.route("/tasks", methods=["GET", "POST"])
-# def find_tasks():
+@app.route("/tasks", methods=["GET", "POST"])
+def find_tasks():
 #     if request.method == "POST":
 #         res = request.get_json()
 #         schedule = res["time"]
@@ -117,7 +117,8 @@ def home_page():
 
 #         return "inserted record into db"
 
-#     elif request.method == "GET":
+    if request.method == "GET":
+         return  "here we are task endpoint"
 
 #         mycursor.execute(""" SELECT * FROM lines_uk """)
 #         x = mycursor.fetchall()
