@@ -39,12 +39,12 @@ app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
 
-mydb = mysql.connector.connect(
-    host="mydb_new",
-    user="root",
-    password="testroot",
-    database="newdb"
-)
+# mydb = mysql.connector.connect(
+#     host="mydb_new",
+#     user="root",
+#     password="testroot",
+#     database="newdb"
+# )
 mycursor = mydb.cursor()
 
 @app.route("/")
