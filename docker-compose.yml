@@ -15,7 +15,7 @@ services:
     build: nginx_server
     restart: always
     ports:
-      - 80:80
+      - 8000:80
     depends_on:
       - app
 
