@@ -45,7 +45,7 @@ app.config['JSON_SORT_KEYS'] = False
 #     password="testroot",
 #     database="newdb"
 # )
-mycursor = mydb.cursor()
+# mycursor = mydb.cursor()
 
 @app.route("/")
 def home_page():
@@ -53,120 +53,120 @@ def home_page():
 
 
 
-@app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])
-def find_specific_task(task_id):
-    if request.method == "GET":
-        mycursor.execute(
+# @app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])
+# def find_specific_task(task_id):
+#     if request.method == "GET":
+#         mycursor.execute(
 
-            """
-           SELECT * FROM lines_uk where task_id ='{task_id}'
-                             """.format(task_id=task_id)
-        )
-        results = mycursor.fetchall()
-        final = []
-        for item in results:
-            content = {
-                "line": item[2],
-                "type": item[3],
-                "description": item[4],
-                "updated": item[5]}
-            final.append(content)
+#             """
+#            SELECT * FROM lines_uk where task_id ='{task_id}'
+#                              """.format(task_id=task_id)
+#         )
+#         results = mycursor.fetchall()
+#         final = []
+#         for item in results:
+#             content = {
+#                 "line": item[2],
+#                 "type": item[3],
+#                 "description": item[4],
+#                 "updated": item[5]}
+#             final.append(content)
 
-        return jsonify(final)
+#         return jsonify(final)
 
-    elif request.method == "DELETE":
-        mycursor.execute(
+#     elif request.method == "DELETE":
+#         mycursor.execute(
 
-            """
-           DELETE * FROM lines_uk where task_id= '{task_id}'
-                             """.format(task_id=int(task_id))
-        )
-        return "DELETE RECORD", task_id
+#             """
+#            DELETE * FROM lines_uk where task_id= '{task_id}'
+#                              """.format(task_id=int(task_id))
+#         )
+#         return "DELETE RECORD", task_id
 
 
-@app.route("/tasks", methods=["GET", "POST"])
-def find_tasks():
-    if request.method == "POST":
-        res = request.get_json()
-        schedule = res["time"]
-        lines = res["lines"]
-        description = res["description"].replace("'", " ")
-        incident_type = res["type"]
-        last_update = res["updated"]
+# @app.route("/tasks", methods=["GET", "POST"])
+# def find_tasks():
+#     if request.method == "POST":
+#         res = request.get_json()
+#         schedule = res["time"]
+#         lines = res["lines"]
+#         description = res["description"].replace("'", " ")
+#         incident_type = res["type"]
+#         last_update = res["updated"]
 
-        task_id = "".join(schedule.split()[0].split(("-")))
+#         task_id = "".join(schedule.split()[0].split(("-")))
 
-        lines = ",".join(lines)
+#         lines = ",".join(lines)
 
-        query = f"""
+#         query = f"""
 
-        insert into lines_uk
-         values
-        (
-        '{task_id}',
-        '{schedule}',
-        '{lines}',
-        '{incident_type}',
-        '{description}',
-        '{last_update}'
-        )
+#         insert into lines_uk
+#          values
+#         (
+#         '{task_id}',
+#         '{schedule}',
+#         '{lines}',
+#         '{incident_type}',
+#         '{description}',
+#         '{last_update}'
+#         )
         
-        """
-        mycursor.execute(query)
-        mydb.commit()
+#         """
+#         mycursor.execute(query)
+#         mydb.commit()
 
-        return "inserted record into db"
+#         return "inserted record into db"
 
-    elif request.method == "GET":
+#     elif request.method == "GET":
 
-        mycursor.execute(""" SELECT * FROM lines_uk """)
-        x = mycursor.fetchall()
-        final = []
-        task_incidents = []
-        if len(x) >= 1:
-            new_task_id = x[0][0]
-            new_schedule_time = x[0][1]
+#         mycursor.execute(""" SELECT * FROM lines_uk """)
+#         x = mycursor.fetchall()
+#         final = []
+#         task_incidents = []
+#         if len(x) >= 1:
+#             new_task_id = x[0][0]
+#             new_schedule_time = x[0][1]
 
-            for result in x:
-                if result[0] == new_task_id:
+#             for result in x:
+#                 if result[0] == new_task_id:
 
-                    task_incidents.append(
-                        {
-                            "line": result[2],
-                            "type": result[3],
-                            "description": result[4],
-                            "updated": result[5]
-                        }
-                    )
+#                     task_incidents.append(
+#                         {
+#                             "line": result[2],
+#                             "type": result[3],
+#                             "description": result[4],
+#                             "updated": result[5]
+#                         }
+#                     )
 
-                else:
-                    content = {
-                        "task_id": new_task_id,
-                        "scheduler_time": new_schedule_time,
-                        "incidents": task_incidents
+#                 else:
+#                     content = {
+#                         "task_id": new_task_id,
+#                         "scheduler_time": new_schedule_time,
+#                         "incidents": task_incidents
 
-                    }
-                    final.append(content)
+#                     }
+#                     final.append(content)
 
-                    new_task_id = result[0]
-                    new_schedule_time = result[0]
-                    task_incidents = [{
-                        "line": result[2],
-                        "type": result[3],
-                        "description": result[4],
-                        "updated": result[5]
-                    }]
+#                     new_task_id = result[0]
+#                     new_schedule_time = result[0]
+#                     task_incidents = [{
+#                         "line": result[2],
+#                         "type": result[3],
+#                         "description": result[4],
+#                         "updated": result[5]
+#                     }]
 
-            content = {
-                "task_id": result[0],
-                "scheduler_time": result[1],
-                "incidents": task_incidents
+#             content = {
+#                 "task_id": result[0],
+#                 "scheduler_time": result[1],
+#                 "incidents": task_incidents
 
-            }
-            final.append(content)
+#             }
+#             final.append(content)
 
-            return jsonify(final)
-        return "empty table"
+#             return jsonify(final)
+#         return "empty table"
 
 
 if __name__ == '__main__':
