@@ -6,8 +6,5 @@ server {
         proxy_pass   http://app:5555;
     }
 
-    location /hit {
-        proxy_pass   http://app:5555/tasks;
 
-    }
 }
