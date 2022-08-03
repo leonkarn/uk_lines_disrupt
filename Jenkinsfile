@@ -7,28 +7,18 @@ pipeline{
             steps {
                 echo "build the application"
 
-
             }
         }
-
-        stage("test"){
-
+        stage("git pull"){
             steps {
-                echo "testing the application"
+                sh """
+                cd /home/flask_project/uk_lines_disrupt
+                
+                git pull
+                """
+                
             }
-
-        stage("deploy"){
-
-            steps {
-                echo " deploy the application"
-
-            }
-
+            
         }
-
-        }
-
-
     }
-
 }
