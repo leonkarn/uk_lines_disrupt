@@ -3,7 +3,7 @@ server {
 
 
     location / {
-        proxy_pass   http://app:5555;
+        proxy_pass   http://instashop_main:5555;
     }
 
 
