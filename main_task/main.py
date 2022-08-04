@@ -49,7 +49,7 @@ mycursor = mydb.cursor()
 
 @app.route("/")
 def home_page():
-   return  "this wqweillqq work"
+   return  "this wwwwwww    qqqqweqwe work"
 
 
 
