@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import mysql.connector
@@ -38,18 +38,9 @@ sched.start()
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
-
-# mydb = mysql.connector.connect(
-#     host="mydb_new",
-#     user="root",
-#     password="testroot",
-#     database="newdb"
-# )
-# mycursor = mydb.cursor()
-
 @app.route("/")
 def home_page():
-   return  "this wwwwwww    qqqqweqwe work"
+   return render_template("base_root.html")
 
 
 
