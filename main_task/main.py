@@ -27,7 +27,7 @@ def sensor():
         lines = lines_parser(item["description"])
         data = {"time": time_now, "lines": lines, "description": item["description"], "type": item["type"],
                 "updated": item.get("lastUpdate")}
-        requests.post("http://localhost:5555/tasks", json=data)
+        requests.post("http://46.101.79.249/tasks", json=data)
 
 
 sched = BackgroundScheduler(daemon=True)
@@ -39,13 +39,13 @@ app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
 
-mydb = mysql.connector.connect(
-    host="mydb_new",
-    user="root",
-    password="testroot",
-    database="newdb"
-)
-mycursor = mydb.cursor()
+# mydb = mysql.connector.connect(
+#     host="mydb_new",
+#     user="root",
+#     password="testroot",
+#     database="newdb"
+# )
+# mycursor = mydb.cursor()
 
 @app.route("/")
 def home_page():
@@ -55,6 +55,13 @@ def home_page():
 
 @app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])
 def find_specific_task(task_id):
+    mydb = mysql.connector.connect(
+    host="mydb_new",
+    user="root",
+    password="testroot",
+    database="newdb"
+)
+    mycursor = mydb.cursor()
     if request.method == "GET":
         mycursor.execute(
 
@@ -86,6 +93,13 @@ def find_specific_task(task_id):
 
 @app.route("/tasks", methods=["GET", "POST"])
 def find_tasks():
+    mydb = mysql.connector.connect(
+    host="mydb_new",
+    user="root",
+    password="testroot",
+    database="newdb"
+    )
+    mycursor = mydb.cursor()
     if request.method == "POST":
         res = request.get_json()
         schedule = res["time"]

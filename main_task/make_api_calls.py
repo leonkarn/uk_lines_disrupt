@@ -33,4 +33,4 @@ for item in res:
     lines = lines_parser(item["description"])
     data = {"time": time_now, "lines": lines, "description": item["description"], "type": item["type"],
             "updated": item.get("lastUpdate")}
-    requests.post("http://localhost:5555/tasks", json=data)
+    requests.post("http://46.101.79.249/tasks", json=data)
