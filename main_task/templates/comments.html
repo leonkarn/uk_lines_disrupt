@@ -1,0 +1,17 @@
+{% extends 'base_root.html' %}
+
+{% block content %}
+    <h1>{% block title %} Comments {% endblock %}</h1>
+    
+        {% for comment in comments %}
+        <p style="font-size: 40px">{{ comment[1] }}</p>
+        <div style="padding: 10px; background-color: #EEE; ">
+            <p style="font-size: 24px">{{ comment[4] }}</p>
+        </div>
+
+        <div style="padding: 10px; background-color: #EEA; ">
+            <p style="font-size: 24px">{{ comment[0] }}</p>
+        </div>
+        {% endfor %}
+    
+{% endblock %}

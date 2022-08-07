@@ -40,8 +40,18 @@ app.config['JSON_SORT_KEYS'] = False
 
 @app.route("/")
 def home_page():
-   return render_template("base_root.html")
+    mydb = mysql.connector.connect(
+    host="mydb_new",
+    user="root",
+    password="testroot",
+    database="newdb"
+    )
+    mycursor = mydb.cursor()
 
+    mycursor.execute(""" SELECT * FROM lines_uk """)
+    x = mycursor.fetchall()
+
+    return render_template('comments.html', comments=x)
 
 
 @app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])
