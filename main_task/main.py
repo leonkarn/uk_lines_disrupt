@@ -38,20 +38,39 @@ sched.start()
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def home_page():
-    mydb = mysql.connector.connect(
-    host="mydb_new",
-    user="root",
-    password="testroot",
-    database="newdb"
-    )
-    mycursor = mydb.cursor()
+   
+    if request.method == 'POST':
+        mydb = mysql.connector.connect(
+        host="mydb_new",
+        user="root",
+        password="testroot",
+        database="newdb"
+        )
+        mycursor = mydb.cursor()
+        # Then get the data from the form
+        tag = request.form['tag']
+        mycursor.execute(
 
-    mycursor.execute(""" SELECT * FROM lines_uk """)
-    x = mycursor.fetchall()
+            """
+           SELECT * FROM lines_uk where line ='{tag}'
+                             """.format(tag=tag)
+        )
+        x = mycursor.fetchall()
+        return render_template('comments.html', comments=x)
 
-    return render_template('comments.html', comments=x)
+    else:
+        mydb = mysql.connector.connect(
+        host="mydb_new",
+        user="root",
+        password="testroot",
+        database="newdb"
+        )
+        mycursor = mydb.cursor()
+        mycursor.execute(""" SELECT * FROM lines_uk """)
+        x = mycursor.fetchall()
+        return render_template('comments.html', comments=x)
 
 
 @app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])

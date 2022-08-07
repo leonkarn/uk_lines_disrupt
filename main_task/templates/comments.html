@@ -1,6 +1,13 @@
 {% extends 'base_root.html' %}
 
 {% block content %}
+    <form action="{{ url_for("home_page")}}" method="post">
+        <input type="text" name="tag"><br>
+    </form>
+
+    <button type="button" onclick="window.location.href='{{ url_for( 'home_page') }}';"class="btn btn-primary" >Reset</button>
+
+
     <h1>{% block title %} Comments {% endblock %}</h1>
     
         {% for comment in comments %}
