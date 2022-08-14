@@ -183,7 +183,7 @@ def find_tasks():
                     final.append(content)
 
                     new_task_id = result[0]
-                    new_schedule_time = result[0]
+                    # new_schedule_time = result[0]
                     task_incidents = [{
                         "line": result[2],
                         "type": result[3],
