@@ -58,7 +58,13 @@ def home_page():
                              """.format(tag=tag)
         )
         x = mycursor.fetchall()
-        return render_template('comments.html', comments=x)
+        newdict = {}
+        for item in x:
+            if item[1] not in newdict:
+                newdict[item[1]] = [item[4]]
+            else:
+                newdict[item[1]].append(item[4])
+        return render_template('comments.html', comments=newdict)
 
     else:
         mydb = mysql.connector.connect(
@@ -68,9 +74,15 @@ def home_page():
         database="newdb"
         )
         mycursor = mydb.cursor()
-        mycursor.execute(""" SELECT * FROM lines_uk """)
+        mycursor.execute(""" SELECT * FROM lines_uk  """)
         x = mycursor.fetchall()
-        return render_template('comments.html', comments=x)
+        newdict = {}
+        for item in x:
+            if item[1] not in newdict:
+                newdict[item[1]] = [item[4]]
+            else:
+                newdict[item[1]].append(item[4])
+        return render_template('comments.html', comments=newdict)
 
 
 @app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])
