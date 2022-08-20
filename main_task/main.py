@@ -54,7 +54,7 @@ def home_page():
         mycursor.execute(
 
             """
-           SELECT * FROM lines_uk where line ='{tag}'
+           SELECT distinct * FROM lines_uk where line ='{tag}'
                              """.format(tag=tag)
         )
         x = mycursor.fetchall()
@@ -74,7 +74,7 @@ def home_page():
         database="newdb"
         )
         mycursor = mydb.cursor()
-        mycursor.execute(""" SELECT * FROM lines_uk  """)
+        mycursor.execute(""" SELECT distinct * FROM lines_uk  """)
         x = mycursor.fetchall()
         newdict = {}
         for item in x:
