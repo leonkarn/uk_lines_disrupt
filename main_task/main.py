@@ -64,6 +64,7 @@ def home_page():
                 newdict[item[1]] = [item[4]]
             else:
                 newdict[item[1]].append(item[4])
+        newdict = dict(sorted(newdict.items()))
         return render_template('comments.html', comments=newdict)
 
     else:
@@ -82,6 +83,7 @@ def home_page():
                 newdict[item[1]] = [item[4]]
             else:
                 newdict[item[1]].append(item[4])
+        newdict = dict(sorted(newdict.items(),reverse=True))
         return render_template('comments.html', comments=newdict)
 
 
