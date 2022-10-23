@@ -1,10 +1,15 @@
 import requests
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Response
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import mysql.connector
-
-
+import requests
+from bs4 import BeautifulSoup
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 
 def lines_parser(description):
   lines_list = ["central", "bakerloo", "circle", "district", "hammersmith-city", "jubilee", "metropolitan",
@@ -37,6 +42,57 @@ sched.start()
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
+
+# --------------
+
+
+def stream_template(template_name, **context):
+    app.update_template_context(context)
+    t = app.jinja_env.get_template(template_name)
+    rv = t.stream(context)
+    rv.disable_buffering()
+    return rv
+
+def generate():
+
+    # # rightmove web scrapper
+    url = "https://www.rightmove.co.uk/property-to-rent/find.html?locationIdentifier=REGION%5E87490&minBedrooms=1&maxPrice=1750&minPrice=1500&propertyTypes=&includeLetAgreed=false&mustHave=&dontShow=&furnishTypes=&keywords="
+    newset = set()
+    x = requests.get(url)
+
+    soup = BeautifulSoup(x.text, 'html.parser')
+    for link in soup.find_all('div', class_="propertyCard-details"):
+        newset.add(link.find(class_="propertyCard-link").find(class_="propertyCard-address").find("meta")["content"])
+
+    # try next pages
+    index = 0
+
+    url_next_page = "https://www.rightmove.co.uk/property-to-rent/find.html?locationIdentifier=REGION%5E87490&minBedrooms=1&maxPrice=1750&minPrice=1500&index={}&propertyTypes=&includeLetAgreed=false&mustHave=&dontShow=&furnishTypes=&keywords=".format(
+        index)
+    x = requests.get(url_next_page)
+
+    while x.status_code == 200:
+        soup = BeautifulSoup(x.text, 'html.parser')
+        for link in soup.find_all('div', class_="propertyCard-details"):
+            newitem = link.find(class_="propertyCard-link").find(class_="propertyCard-address").find("meta")["content"]
+            if newitem != "":
+                newset.add(newitem)
+            yield str(newitem)
+
+        index += 24
+        url_next_page = "https://www.rightmove.co.uk/property-to-rent/find.html?locationIdentifier=REGION%5E87490&minBedrooms=1&maxPrice=1750&minPrice=1500&index={}&propertyTypes=&includeLetAgreed=false&mustHave=&dontShow=&furnishTypes=&keywords=".format(
+            index)
+        x = requests.get(url_next_page)
+
+
+@app.route('/stream')
+def stream_view():
+    rows = generate()
+    return Response(stream_template('template.html', rows=rows))
+
+
+# --------------
+
 
 @app.route("/", methods=['GET', 'POST'])
 def home_page():

@@ -1,0 +1,17 @@
+{% extends 'base_root.html' %}
+
+{% block content %}
+
+    {% for item in rows %}
+        <div style="padding: 10px; background-color: #EEE; ">
+
+
+        <p style="font-size: 40px">{{ item }}</p>
+        </div>
+        <div style="padding: 10px;">
+        </div>
+
+
+    {% endfor %}
+
+{% endblock %}
