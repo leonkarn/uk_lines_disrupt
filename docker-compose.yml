@@ -30,15 +30,24 @@ services:
         MYSQL_ROOT_PASSWORD: testroot
         MYSQL_DATABASE: newdb
         MYSQL_PORT: 3306
-      # healthcheck:
 
-      #   test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+
+  airflow_server:
+      container_name: airflow
+      build:
+        context: .
+        dockerfile: dags/Dockerfile
+      volumes:
+          - ./dags/:/usr/local/airflow/dags
+      ports:
+          - "8080:8080"
 
 
 
 volumes:
     app:
     database:
+    airflow_server:
 
 
 
