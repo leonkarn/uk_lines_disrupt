@@ -43,8 +43,6 @@ sched.start()
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
-# --------------
-
 
 def stream_template(template_name, **context):
     app.update_template_context(context)
@@ -54,8 +52,16 @@ def stream_template(template_name, **context):
     return rv
 
 def generate():
-
     # # rightmove web scrapper
+    mydb = mysql.connector.connect(
+        host="mydb_new",
+        user="root",
+        password="testroot",
+        database="newdb"
+    )
+    mycursor = mydb.cursor()
+
+
     url = "https://www.rightmove.co.uk/property-to-rent/find.html?locationIdentifier=REGION%5E87490&minBedrooms=1&maxPrice=1750&minPrice=1500&propertyTypes=&includeLetAgreed=false&mustHave=&dontShow=&furnishTypes=&keywords="
     newset = set()
     x = requests.get(url)
@@ -77,7 +83,26 @@ def generate():
             newitem = link.find(class_="propertyCard-link").find(class_="propertyCard-address").find("meta")["content"]
             if newitem != "":
                 newset.add(newitem)
-            yield str(newitem)
+                yield str(newitem)
+
+                newitem = newitem.replace("'", " ")
+
+                query = f"""
+
+                        insert ignore into houses
+                         values
+                        (
+                        '{newitem}',
+                        'no_rightmove_link',
+                        'no_zoopla_link'
+                        
+                        )
+
+                        """
+                mycursor.execute(query)
+                mydb.commit()
+
+
 
         index += 24
         url_next_page = "https://www.rightmove.co.uk/property-to-rent/find.html?locationIdentifier=REGION%5E87490&minBedrooms=1&maxPrice=1750&minPrice=1500&index={}&propertyTypes=&includeLetAgreed=false&mustHave=&dontShow=&furnishTypes=&keywords=".format(
@@ -85,10 +110,23 @@ def generate():
         x = requests.get(url_next_page)
 
 
-@app.route('/stream')
+@app.route('/stream', methods= ["GET", "POST"])
 def stream_view():
-    rows = generate()
-    return Response(stream_template('template.html', rows=rows))
+    if request.method == "POST":
+        rows = generate()
+        return Response(stream_template('template.html', rows=rows))
+    else:
+        mydb = mysql.connector.connect(
+            host="mydb_new",
+            user="root",
+            password="testroot",
+            database="newdb"
+        )
+        mycursor = mydb.cursor()
+        query = "select property_name from houses "
+        mycursor.execute(query)
+        x = mycursor.fetchall()
+        return Response(stream_template('template.html', rows=x))
 
 
 # --------------
@@ -96,7 +134,6 @@ def stream_view():
 
 @app.route("/", methods=['GET', 'POST'])
 def home_page():
-   
     if request.method == 'POST':
         mydb = mysql.connector.connect(
         host="mydb_new",
@@ -141,7 +178,6 @@ def home_page():
                 newdict[item[1]].append(item[4])
         newdict = dict(sorted(newdict.items(),reverse=True))
         return render_template('comments.html', comments=newdict)
-
 
 @app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])
 def find_specific_task(task_id):
