@@ -51,6 +51,7 @@ def stream_template(template_name, **context):
     rv.disable_buffering()
     return rv
 
+
 def generate():
     # # rightmove web scrapper
     mydb = mysql.connector.connect(
@@ -130,6 +131,11 @@ def stream_view():
 
 
 # --------------
+
+@app.route("/newhouses", methods=['GET', 'POST'])
+def new_houses():
+    return render_template('newhouses.html')
+
 
 
 @app.route("/", methods=['GET', 'POST'])

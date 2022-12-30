@@ -24,11 +24,11 @@ import requests
 #     return newlines
 
 
-# time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-# req = requests.get(
-#     "https://api.tfl.gov.uk/Line/central,bakerloo,circle,district,hammersmith-city,jubilee,metropolitan,northern,piccadilly,victoria,waterloo-city/Disruption")
-# res = req.json()
-# print ("newresult",res)
+time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+req = requests.get(
+    "https://api.tfl.gov.uk/Line/central,bakerloo,circle,district,hammersmith-city,jubilee,metropolitan,northern,piccadilly,victoria,waterloo-city/Disruption")
+res = req.json()
+print ("newresult",res)
 
 # for item in res:
 #     lines = lines_parser(item["description"])
@@ -53,20 +53,20 @@ import mysql.connector
 # import requests
 # x = requests.get("http://localhost:5555").json()
 # print (x)
-
-mydb = mysql.connector.connect(
-    host="mydb_new",
-    user="root",
-    password="testroot",
-    database="newdb"
-)
-mycursor = mydb.cursor()
-mycursor.execute(""" SELECT * FROM lines_uk  """)
-x = mycursor.fetchall()
-newdict = {}
-for item in x:
-    if item[1] not in newdict:
-        newdict[item[1]] = [item[4]]
-    else:
-        newdict[item[1]].append(item[4])
-print (newdict)
+#
+# mydb = mysql.connector.connect(
+#     host="mydb_new",
+#     user="root",
+#     password="testroot",
+#     database="newdb"
+# )
+# mycursor = mydb.cursor()
+# mycursor.execute(""" SELECT * FROM lines_uk  """)
+# x = mycursor.fetchall()
+# newdict = {}
+# for item in x:
+#     if item[1] not in newdict:
+#         newdict[item[1]] = [item[4]]
+#     else:
+#         newdict[item[1]].append(item[4])
+# print (newdict)
