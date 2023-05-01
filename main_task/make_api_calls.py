@@ -8,6 +8,19 @@
 #      last_update varchar(255)
 
 # """
+
+# create table lines_uk (
+#
+# task_id varchar(255),
+#      scheduler_time varchar(255),
+#      line varchar(255),
+#      type varchar(255),
+#      description LONGTEXT,
+#      last_update varchar(255)
+#
+# )
+
+
 from datetime import datetime
 import requests
 
