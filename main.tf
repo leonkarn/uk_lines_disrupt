@@ -56,5 +56,35 @@ resource "aws_lb_target_group" "load_target" {
   vpc_id   = aws_vpc.mainvpc.id
 }
 
-
+//resource "aws_ecs_task_definition" "example_task" {
+//  family                   = "example-task"
+//  network_mode             = "awsvpc"
+//  cpu                      = 1024
+//  memory                   = 2048
+//  requires_compatibilities = ["FARGATE"]
+//
+//  container_definitions = jsonencode([
+//    {
+//      name  = "container1"
+//      image = "your-image-1:latest"
+//      portMappings = [
+//        {
+//          containerPort = 80
+//          hostPort      = 80
+//        }
+//      ]
+//    },
+//    {
+//      name  = "container2"
+//      image = "your-image-2:latest"
+//      portMappings = [
+//        {
+//          containerPort = 8080
+//          hostPort      = 8080
+//        }
+//      ]
+//    }
+//  ])
+//}
+//
 

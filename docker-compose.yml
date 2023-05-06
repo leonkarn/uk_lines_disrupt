@@ -16,8 +16,6 @@ services:
     restart: always
     ports:
       - 80:80
-    depends_on:
-      - app
 
   database:
       container_name: mydb_new
