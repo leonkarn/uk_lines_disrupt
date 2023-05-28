@@ -9,21 +9,64 @@
 
 
     <h1>{% block title %} Comments {% endblock %}</h1>
-    
+
         {% for comment in comments %}
         <p style="font-size: 40px">{{ comment }}</p>
         <div style="padding: 10px; background-color: #EEE; ">
             {% for item in comments[comment] %}
                 <li style="font-size: 24px">{{ item }}</li>
-<!--            <div style="padding: 1px; background-color: #EEA; ">-->
-<!--                 <p style="font-size: 10px"> </p>-->
-<!--            </div>-->
 
             {% endfor %}
 
         </div>
 
-
         {% endfor %}
+
+        <style>
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        th, td {
+          text-align: left;
+          padding: 8px;
+          height: 50px;
+          font-size: 20px;
+          font-weight: bold;
+
+
+
+        }
+
+        tr:nth-child(even){background-color: #f2f2f2}
+
+        th {
+          background-color: #04AA6D;
+          color: white;
+        }
+        </style>
+    <table className="table-hover">
+
+              <thead>
+                <tr>
+                  <th className="border-0">ID</th>
+                  <th className="border-0">Name</th>
+                  <th className="border-0">Country</th>
+                  <th className="border-0">City</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {% for new_val in newvals %}
+                  <tr>
+                  <td>{{ new_val.id }}</td>
+                  <td>{{ new_val.name }}</td>
+                  <td>{{ new_val.country }}</td>
+                  <td>{{ new_val.city }}</td>
+                  </tr>
+                  {% endfor %}
+
+              </tbody>
+            </table>
     
 {% endblock %}

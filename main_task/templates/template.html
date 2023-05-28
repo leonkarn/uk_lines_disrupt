@@ -8,17 +8,34 @@
         <button name="Click" type="submit" class="btn btn-primary" >click me!</button>
     </form>
 
-
     {% for item in rows %}
         <div style="padding: 10px; background-color: #EEE; ">
-
-
         <p style="font-size: 40px">{{ item }}</p>
         </div>
         <div style="padding: 10px;">
         </div>
 
 
+
     {% endfor %}
+    <div class="pagination"
+    style="
+        display: flex;
+      justify-content: space-between;
+      max-width: 150px;
+      margin: 0 auto;
+      padding: 20px 0;
+        "
+
+    >
+        {% if page > 1 %}
+            <a href="/stream?page={{ page - 1 }}&per_page={{ per_page }}">Previous</a>
+        {% endif %}
+
+        {% if total_count > page * per_page %}
+            <a href="/stream?page={{ page + 1 }}&per_page={{ per_page }}">Next</a>
+        {% endif %}
+    </div>
+
 
 {% endblock %}

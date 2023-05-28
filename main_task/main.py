@@ -1,26 +1,24 @@
-import requests
-from flask import Flask, request, jsonify, render_template, Response
+from flask import Flask, request, jsonify, Response
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import mysql.connector
 import requests
 from bs4 import BeautifulSoup
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
+from flask_login import login_required
+from flask import render_template, redirect, url_for
+from flask_sqlalchemy import Pagination
+
 
 def lines_parser(description):
-  lines_list = ["central", "bakerloo", "circle", "district", "hammersmith-city", "jubilee", "metropolitan",
+    lines_list = ["central", "bakerloo", "circle", "district", "hammersmith-city", "jubilee", "metropolitan",
                   "northern",
                   "piccadilly", "victoria", "waterloo and city"]
-  newlines = []
-  for line in lines_list:
-    if line in description.lower():
-      newlines.append(line)
+    newlines = []
+    for line in lines_list:
+        if line in description.lower():
+            newlines.append(line)
 
-  return newlines
+    return newlines
 
 
 def sensor():
@@ -62,7 +60,6 @@ def generate():
     )
     mycursor = mydb.cursor()
 
-
     url = "https://www.rightmove.co.uk/property-to-rent/find.html?locationIdentifier=REGION%5E87490&minBedrooms=1&maxPrice=1750&minPrice=1500&propertyTypes=&includeLetAgreed=false&mustHave=&dontShow=&furnishTypes=&keywords="
     newset = set()
     x = requests.get(url)
@@ -103,15 +100,13 @@ def generate():
                 mycursor.execute(query)
                 mydb.commit()
 
-
-
         index += 24
         url_next_page = "https://www.rightmove.co.uk/property-to-rent/find.html?locationIdentifier=REGION%5E87490&minBedrooms=1&maxPrice=1750&minPrice=1500&index={}&propertyTypes=&includeLetAgreed=false&mustHave=&dontShow=&furnishTypes=&keywords=".format(
             index)
         x = requests.get(url_next_page)
 
 
-@app.route('/stream', methods= ["GET", "POST"])
+@app.route('/stream', methods=["GET", "POST"])
 def stream_view():
     if request.method == "POST":
         rows = generate()
@@ -127,25 +122,40 @@ def stream_view():
         query = "select property_name from houses "
         mycursor.execute(query)
         x = mycursor.fetchall()
-        return Response(stream_template('template.html', rows=x))
+
+        num_records = len(x)
+
+        page = int(request.args.get('page', 1))
+        per_page = 15
+
+        # Calculate offset
+        offset = (page - 1) * per_page
+
+        x = x[offset:offset+per_page]
+
+        return Response(render_template('template.html', rows=x, page=page, per_page=per_page, total_count=num_records))
 
 
 # --------------
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return redirect(url_for('new_houses'))
 
+
+@login_required
 @app.route("/newhouses", methods=['GET', 'POST'])
 def new_houses():
     return render_template('newhouses.html')
-
 
 
 @app.route("/", methods=['GET', 'POST'])
 def home_page():
     if request.method == 'POST':
         mydb = mysql.connector.connect(
-        host="mydb_new",
-        user="root",
-        password="testroot",
-        database="newdb"
+            host="mydb_new",
+            user="root",
+            password="testroot",
+            database="newdb"
         )
         mycursor = mydb.cursor()
         # Then get the data from the form
@@ -168,10 +178,10 @@ def home_page():
 
     else:
         mydb = mysql.connector.connect(
-        host="mydb_new",
-        user="root",
-        password="testroot",
-        database="newdb"
+            host="mydb_new",
+            user="root",
+            password="testroot",
+            database="newdb"
         )
         mycursor = mydb.cursor()
         mycursor.execute(""" SELECT distinct * FROM lines_uk  """)
@@ -182,17 +192,27 @@ def home_page():
                 newdict[item[1]] = [item[4]]
             else:
                 newdict[item[1]].append(item[4])
-        newdict = dict(sorted(newdict.items(),reverse=True))
-        return render_template('comments.html', comments=newdict)
+        newdict = dict(sorted(newdict.items(), reverse=True))
+        newtable_vals = [
 
-@app.route("/tasks/<string:task_id>", methods=["GET", "DELETE","PUT"])
+            {"id": 1, "name": "John", "country": "greece", "city": "athens"},
+            {"id": 2, "name": "Leo", "country": "usa", "city": "athens"},
+            {"id": 3, "name": "philip", "country": "uk", "city": "London"},
+            {"id": 4, "name": "james", "country": "greece", "city": "larisa"},
+
+        ]
+
+        return render_template('comments.html', comments=newdict, newvals=newtable_vals)
+
+
+@app.route("/tasks/<string:task_id>", methods=["GET", "DELETE", "PUT"])
 def find_specific_task(task_id):
     mydb = mysql.connector.connect(
-    host="mydb_new",
-    user="root",
-    password="testroot",
-    database="newdb"
-)
+        host="mydb_new",
+        user="root",
+        password="testroot",
+        database="newdb"
+    )
     mycursor = mydb.cursor()
     if request.method == "GET":
         mycursor.execute(
@@ -226,10 +246,10 @@ def find_specific_task(task_id):
 @app.route("/tasks", methods=["GET", "POST"])
 def find_tasks():
     mydb = mysql.connector.connect(
-    host="mydb_new",
-    user="root",
-    password="testroot",
-    database="newdb"
+        host="mydb_new",
+        user="root",
+        password="testroot",
+        database="newdb"
     )
     mycursor = mydb.cursor()
     if request.method == "POST":
