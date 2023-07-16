@@ -6,8 +6,6 @@ import requests
 from bs4 import BeautifulSoup
 from flask_login import login_required
 from flask import render_template, redirect, url_for
-from flask_sqlalchemy import Pagination
-
 
 def lines_parser(description):
     lines_list = ["central", "bakerloo", "circle", "district", "hammersmith-city", "jubilee", "metropolitan",
@@ -53,7 +51,7 @@ def stream_template(template_name, **context):
 def generate():
     # # rightmove web scrapper
     mydb = mysql.connector.connect(
-        host="mydb_new",
+        host = "olddb",
         user="root",
         password="testroot",
         database="newdb"
@@ -113,7 +111,7 @@ def stream_view():
         return Response(stream_template('template.html', rows=rows))
     else:
         mydb = mysql.connector.connect(
-            host="mydb_new",
+            host = "olddb",
             user="root",
             password="testroot",
             database="newdb"
@@ -152,7 +150,7 @@ def new_houses():
 def home_page():
     if request.method == 'POST':
         mydb = mysql.connector.connect(
-            host="mydb_new",
+            host = "olddb",
             user="root",
             password="testroot",
             database="newdb"
@@ -178,7 +176,7 @@ def home_page():
 
     else:
         mydb = mysql.connector.connect(
-            host="mydb_new",
+            host = "olddb",
             user="root",
             password="testroot",
             database="newdb"
@@ -208,7 +206,7 @@ def home_page():
 @app.route("/tasks/<string:task_id>", methods=["GET", "DELETE", "PUT"])
 def find_specific_task(task_id):
     mydb = mysql.connector.connect(
-        host="mydb_new",
+        host = "olddb",
         user="root",
         password="testroot",
         database="newdb"
@@ -246,7 +244,7 @@ def find_specific_task(task_id):
 @app.route("/tasks", methods=["GET", "POST"])
 def find_tasks():
     mydb = mysql.connector.connect(
-        host="mydb_new",
+        host = "olddb",
         user="root",
         password="testroot",
         database="newdb"
@@ -337,4 +335,4 @@ def find_tasks():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(port=5555, host="0.0.0.0")
+    app.run(port=5000, host="0.0.0.0")

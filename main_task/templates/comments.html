@@ -1,8 +1,8 @@
 {% extends 'base_root.html' %}
 
 {% block content %}
-    <form action="{{ url_for('home_page')}}" method="post">
-        <input type="text" name="tag"><br>
+    <form action="{{ url_for('home_page')}}"  method="post">
+        <input type="text" value="5qweq" name="tag"><br>
     </form>
 
     <button type="button" onclick="window.location.href='{{ url_for( 'home_page') }}';"class="btn btn-primary" >Reset</button>

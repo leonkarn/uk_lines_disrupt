@@ -7,7 +7,7 @@ services:
     volumes:
       - ./main_task:/app
     ports:
-      - "5555:5555"
+      - "5000:5000"
     depends_on:
       - database
 
@@ -18,16 +18,16 @@ services:
       - 80:80
 
   database:
-      container_name: mydb_new
+      container_name: olddb
       image: mysql:5.7
       volumes:
         - ./sql_data:/var/lib/mysql
       ports:
-        - "3306:3306"
+        - "3360:3360"
       environment:
         MYSQL_ROOT_PASSWORD: testroot
         MYSQL_DATABASE: newdb
-        MYSQL_PORT: 3306
+        MYSQL_PORT: 3360
 
 
 #  airflow_server:

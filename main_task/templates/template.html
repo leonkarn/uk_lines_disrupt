@@ -18,16 +18,18 @@
 
 
     {% endfor %}
-    <div class="pagination"
-    style="
-        display: flex;
-      justify-content: space-between;
-      max-width: 150px;
-      margin: 0 auto;
-      padding: 20px 0;
-        "
 
-    >
+    <style>
+    div.pagination {
+        margin-right: 30px;
+        float: right;
+        display: flex;
+        column-gap: 20px;
+        justify-content: space-between;
+    }
+    </style>
+
+    <div class="pagination">
         {% if page > 1 %}
             <a href="/stream?page={{ page - 1 }}&per_page={{ per_page }}">Previous</a>
         {% endif %}
